@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json.schemastore.org/web-manifest-combined.json",
+  "name": "定期タスク管理アプリ",
+  "lang": "ja-JP",
+  "short_name": "定期タスク管理",
+  "description": "定期的なタスクを管理するためのアプリケーション",
+  "start_url": "/",
+  "background_color": "#2f3d58",
+  "theme_color": "#2f3d58",
+  "display": "standalone",
+  "icons": [
+    {
+      "src": "/icon512.png",
+      "sizes": "512x512"
+    }
+  ]
+}
