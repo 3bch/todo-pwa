@@ -17,8 +17,6 @@
 
     /* Linting */
     "strict": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
     "noUncheckedIndexedAccess": true,
@@ -28,9 +26,12 @@
     "baseUrl": "./",
     "paths": {
       "@/*": ["src/*"]
-    }
+    },
+
+    /* dependencies types */
+    "types": ["vite/client"]
   },
-  "include": ["src"],
+  "include": ["src/**/*"],
   "references": [
     {
       "path": "./tsconfig.node.json"

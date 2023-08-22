@@ -9,12 +9,27 @@ export default defineConfig({
       strategies: 'injectManifest',
       srcDir: 'src',
       filename: 'sw.ts',
-
       devOptions: {
         enabled: true,
         type: 'module',
       },
       registerType: 'autoUpdate',
+      manifest: {
+        name: '定期タスク管理',
+        short_name: '定期タスク管理',
+        lang: 'ja',
+        description: '定期的なタスクを管理するためのアプリケーション',
+        start_url: './index.html',
+        background_color: '#2f3d58',
+        theme_color: '#2f3d58',
+        display: 'standalone',
+        icons: [
+          {
+            src: '/icon512.png',
+            size: '512x512',
+          },
+        ],
+      },
     }),
   ],
 });
