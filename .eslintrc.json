@@ -20,7 +20,20 @@
   },
   "plugins": ["import", "react-refresh"],
   "rules": {
+    "no-restricted-imports": [
+      "error",
+      {
+        "patterns": [
+          {
+            "group": ["./*", "../*"],
+            "message": "Use absolute imports instead."
+          }
+        ]
+      }
+    ],
     "import/no-default-export": "error",
+    "import/consistent-type-specifier-style": ["error", "prefer-inline"],
+    "import/no-duplicates": ["error", { "prefer-inline": true }],
     "import/order": [
       "error",
       {

@@ -7,29 +7,26 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
 
-    /* Bundler mode */
-    "moduleResolution": "bundler",
+    "moduleResolution": "Bundler",
     "allowImportingTsExtensions": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
+    "esModuleInterop": true,
     "noEmit": true,
     "jsx": "react-jsx",
 
-    /* Linting */
     "strict": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
     "noUncheckedIndexedAccess": true,
     "noImplicitOverride": true,
 
-    /* import path */
     "baseUrl": "./",
     "paths": {
-      "@/*": ["src/*"]
+      "#/*": ["src/*"]
     },
 
-    /* dependencies types */
-    "types": ["vite/client"]
+    "types": ["vite/client", "jest"]
   },
   "include": ["src/**/*"],
   "references": [

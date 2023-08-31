@@ -1,47 +1,42 @@
-import { DateTime } from 'luxon';
-import type { Output } from 'valibot';
-import { is } from 'valibot';
+import { DateTime, Duration } from 'luxon';
+import { safeParse } from 'valibot';
 import { precacheAndRoute } from 'workbox-precaching';
 
-import { TimerStateSchema } from './timer';
+import { NotificationSchedulesMapper, type NotificationSchedule } from '#/domain/schema';
 
 declare let self: ServiceWorkerGlobalScope;
 
 precacheAndRoute(self.__WB_MANIFEST);
 
-// やるべきこと
-// 1. interval で定期的に現在時刻を確認する
-// 2. 現在時刻がタスクの通知時刻を過ぎていたら通知を送り、タスクを積み残しリストに登録する
-
-let timerState: Output<typeof TimerStateSchema> = [
-  {
-    id: '1',
-    title: 'タスク1',
-    dateTime: '2023-08-22T21:10:00+09:00',
-  },
-];
-
-self.addEventListener('message', (event) => {
-  if (is(TimerStateSchema, event.data)) {
-    timerState = event.data;
-  }
+const INTERVAL = Duration.fromObject({
+  minutes: 5,
 });
 
-const INTERVAL = 1000 * 60 * 5;
+let notificationSchedule: NotificationSchedule = {};
+let prevDateTime = DateTime.now();
 
-setInterval(async () => {
+self.addEventListener('message', (event) => {
+  const result = safeParse(NotificationSchedulesMapper.schema, event.data);
+  if (!result.success) {
+    console.warn('IGNORE: Illegal Message', result.error, event.data);
+    return;
+  }
+
+  notificationSchedule = result.data;
+});
+
+setInterval(() => {
   const now = DateTime.now();
 
-  for (const task of timerState) {
-    if (DateTime.fromISO(task.dateTime) <= now) {
-      void self.registration.showNotification(task.title, {
-        body: `${task.dateTime} に通知を送りました。`,
+  for (const [dateTime, tasks] of Object.entries(notificationSchedule)) {
+    const scheduled = DateTime.fromISO(dateTime);
+    if (prevDateTime < scheduled && scheduled <= now) {
+      const message = tasks.join(', ');
+      void self.registration.showNotification('本日のタスクの通知', {
+        body: message,
       });
     }
   }
 
-  const clients = await self.clients.matchAll();
-  clients.forEach((client) => {
-    client.postMessage('update');
-  });
-}, INTERVAL);
+  prevDateTime = now;
+}, INTERVAL.toMillis());
