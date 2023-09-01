@@ -1,6 +1,6 @@
 import { createStore } from 'jotai';
 
-import { selectNotificationScheduleAtom } from '#/domain/atom';
+import { selectNotificationScheduleAtom } from '##/domain/atom';
 
 export function createDomainStore() {
   const store = createStore();

@@ -9,8 +9,8 @@ import {
   TaskSchedulesMapper,
   type NotificationSchedule,
   type TaskSchedule,
-} from '#/domain/schema';
-import { atomWithValidatedStorage } from '#/domain/util/storage';
+} from '##/domain/schema';
+import { atomWithValidatedStorage } from '##/domain/util/storage';
 
 const taskSchedulesAtom = atomWithValidatedStorage('taskSchedules', TaskSchedulesMapper, {});
 const completedTasksAtom = atomWithValidatedStorage('completedTasks', CompletedTasksMapper, []);
@@ -23,6 +23,7 @@ export type NewTaskSchedule = Omit<TaskSchedule, 'id'>;
 export const createTaskScheduleAtom = atom(null, (_, set, taskSchedule: NewTaskSchedule) => {
   // TODO: taskSchedule のバリデーションがこのレイヤーでされていなくてよいか検討する
   // ちょっと微妙だが、toInput したあとに再度 parse することでバリデーションはできるはず
+  // TODO: id についても再現可能にすべきか検討する
   const id = uuid();
   set(withImmer(taskSchedulesAtom), (draft) => {
     draft[id] = { id, ...taskSchedule };

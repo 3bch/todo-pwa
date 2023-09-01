@@ -2,7 +2,7 @@ import { DateTime, Duration } from 'luxon';
 import { safeParse } from 'valibot';
 import { precacheAndRoute } from 'workbox-precaching';
 
-import { NotificationSchedulesMapper, type NotificationSchedule } from '#/domain/schema';
+import { NotificationSchedulesMapper, type NotificationSchedule } from '##/domain/schema';
 
 declare let self: ServiceWorkerGlobalScope;
 

@@ -19,7 +19,7 @@ import {
   type Output,
 } from 'valibot';
 
-import { type JsonMapper } from '#/domain/util/storage';
+import { type JsonMapper } from '##/domain/util/storage';
 
 const TitleSchema = string([minLength(1), maxLength(30)]);
 const DateSchema = transform(string([isoDate()]), (value) => DateTime.fromISO(value));

@@ -1,7 +1,7 @@
 import { DateTime, Duration } from 'luxon';
 import { parse } from 'valibot';
 
-import { TaskScheduleSchema, TaskSchedulesMapper } from '#/domain/schema';
+import { TaskScheduleSchema, TaskSchedulesMapper } from '##/domain/schema';
 
 describe('domain/schema', () => {
   describe('TaskScheduleSchema', () => {
