@@ -8,6 +8,8 @@
     "eslint:recommended",
     "plugin:@typescript-eslint/recommended-type-checked",
     "plugin:@typescript-eslint/stylistic-type-checked",
+    "plugin:react/recommended",
+    "plugin:react/jsx-runtime",
     "plugin:react-hooks/recommended",
     "prettier"
   ],
@@ -18,7 +20,7 @@
     "sourceType": "module",
     "project": ["./tsconfig.json", "./tsconfig.node.json"]
   },
-  "plugins": ["import", "react-refresh"],
+  "plugins": ["import", "react-refresh", "tailwindcss"],
   "rules": {
     "no-restricted-imports": [
       "error",
@@ -54,7 +56,18 @@
     "@typescript-eslint/array-type": ["error", { "default": "array-simple" }],
     "@typescript-eslint/consistent-type-definitions": ["error", "type"],
     "@typescript-eslint/consistent-type-exports": "error",
-    "@typescript-eslint/consistent-type-imports": "error"
+    "@typescript-eslint/consistent-type-imports": "error",
+    "@typescript-eslint/no-misused-promises": [
+      "error",
+      { "checksVoidReturn": { "attributes": false } }
+    ],
+
+    "tailwindcss/enforces-negative-arbitrary-values": "error",
+    "tailwindcss/enforces-shorthand": "error",
+    "tailwindcss/migration-from-tailwind-2": "error",
+    "tailwindcss/no-arbitrary-value": "error",
+    "tailwindcss/no-custom-classname": "error",
+    "tailwindcss/no-contradicting-classname": "error"
   },
   "overrides": [
     {

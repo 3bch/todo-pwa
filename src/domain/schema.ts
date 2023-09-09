@@ -5,23 +5,27 @@ import {
   isoDate,
   isoDateTime,
   isoTime,
+  literal,
   maxLength,
   maxValue,
   minLength,
   minValue,
+  nan,
+  nullish,
   number,
   object,
   optional,
   record,
   string,
   transform,
+  union,
   type Input,
   type Output,
 } from 'valibot';
 
 import { type JsonMapper } from '##/domain/util/storage';
 
-const TitleSchema = string([minLength(1), maxLength(30)]);
+const TitleSchema = string([minLength(1, '必須項目です'), maxLength(20)]);
 const DateSchema = transform(string([isoDate()]), (value) => DateTime.fromISO(value));
 
 const DurationSchema = transform(
@@ -57,10 +61,13 @@ const TaskSchedulesSchema = record(string(), TaskScheduleSchema);
 export const TaskSchedulesMapper: JsonMapper<typeof TaskSchedulesSchema> = {
   schema: TaskSchedulesSchema,
   toInput: (value) =>
-    Object.fromEntries(Object.entries(value).map(([key, value]) => [key, toInputFromTaskSchedule(value)])),
+    Object.fromEntries(
+      Object.entries(value).map(([key, value]) => [key, toInputFromTaskSchedule(value)]),
+    ),
 };
 
 const CompletedTaskSchema = object({
+  id: string(),
   title: TitleSchema,
   scheduledDate: DateSchema,
   completedDate: DateSchema,
@@ -91,7 +98,9 @@ export type Setting = Output<typeof SettingSchema>;
 
 function toInputFromSetting(value: Setting): Input<typeof SettingSchema> {
   return {
-    notificationTime: value.notificationTime.toISOTime()!,
+    notificationTime: value.notificationTime.toISOTime({
+      suppressSeconds: true,
+    })!,
   };
 }
 
@@ -116,3 +125,29 @@ export const NotificationSchedulesMapper: JsonMapper<typeof NotificationSchedule
   schema: NotificationScheduleSchema,
   toInput: (value) => value,
 };
+
+export const TaskScheduleFormSchema = object({
+  title: TitleSchema,
+  nextDate: DateSchema,
+  interval: transform(
+    object({
+      value: number([
+        integer('整数値である必要があります'),
+        minValue(1, '1 以上である必要があります'),
+      ]),
+      unit: union([literal('years'), literal('months'), literal('weeks'), literal('days')]),
+    }),
+    ({ value, unit }) => Duration.fromObject({ [unit]: value }),
+  ),
+  weekday: transform(
+    nullish(union([nan(), number([integer(), minValue(1), maxValue(7)])])),
+    (value) => {
+      if (value == null) {
+        return undefined;
+      }
+      return Number.isNaN(value) ? undefined : value;
+    },
+  ),
+});
+
+export type TaskScheduleForm = Input<typeof TaskScheduleFormSchema>;

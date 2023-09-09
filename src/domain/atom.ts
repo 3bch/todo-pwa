@@ -17,6 +17,7 @@ const completedTasksAtom = atomWithValidatedStorage('completedTasks', CompletedT
 const settingAtom = atomWithValidatedStorage('setting', SettingMapper, {
   notificationTime: Duration.fromISOTime('07:00'),
 });
+const todayAtom = atom(DateTime.now().set({ hour: 0, minute: 0, second: 0, millisecond: 0 }));
 
 export type NewTaskSchedule = Omit<TaskSchedule, 'id'>;
 
@@ -47,18 +48,18 @@ export const deleteTaskScheduleAtom = atom(null, (_, set, id: string) => {
   // TODO: 削除できたかを返す
 });
 
-export const completeTaskAtom = atom(null, (get, set, id: string) => {
+export const completeTaskAtom = atom(null, (get, set, id: string, today: DateTime) => {
   const taskSchedule = get(taskSchedulesAtom)[id];
   if (taskSchedule === undefined) {
     throw new Error('index is out of range');
   }
 
-  // LocalStorage に保存する際に、時刻は切り捨てられているが、念のためここでも切り捨てておく
-  const today = DateTime.now().set({ hour: 0, minute: 0, second: 0, millisecond: 0 });
+  const completedTaskId = uuid();
 
   // 複数の Atom の更新が簡単に記述できるのは jotai の強み
   set(withImmer(completedTasksAtom), (draft) => {
     draft.push({
+      id: completedTaskId,
       title: taskSchedule.title,
       scheduledDate: taskSchedule.nextDate,
       completedDate: today,
@@ -76,15 +77,23 @@ export const completeTaskAtom = atom(null, (get, set, id: string) => {
   set(withImmer(taskSchedulesAtom), (draft) => {
     draft[id]!.nextDate = nextDate;
   });
+
+  return completedTaskId;
 });
 
-/*
-参照で必要となる atom
-- 予定の一覧
-- 予定ひとつの取得
-- やるべき予定の取得
-- 完了したタスクの一覧取得
-*/
+// TODO: なぜかこちらは最初のもの以外は taskSchedule が更新されない(completedTasks は追加される)
+export const completeTasksAtom = atom(null, (_, set, ids: string[]) => {
+  // LocalStorage に保存する際に、時刻は切り捨てられているが、念のためここでも切り捨てておく
+  const today = DateTime.now().set({ hour: 0, minute: 0, second: 0, millisecond: 0 });
+  return ids.map((id) => set(completeTaskAtom, id, today));
+});
+
+export const updateTodayAtom = atom(null, (get, set) => {
+  const today = DateTime.now().set({ hour: 0, minute: 0, second: 0, millisecond: 0 });
+  if (get(todayAtom) < today) {
+    set(todayAtom, today);
+  }
+});
 
 export const selectAllTaskSchedulesAtom = atom((get) => Object.values(get(taskSchedulesAtom)));
 
@@ -103,7 +112,7 @@ export function selectOneTaskSchedule(id: string) {
 
 export const selectTodoTasksAtom = atom((get) => {
   const taskSchedules = get(taskSchedulesAtom);
-  const today = DateTime.now().set({ hour: 0, minute: 0, second: 0, millisecond: 0 });
+  const today = get(todayAtom);
 
   return Object.values(taskSchedules)
     .filter((taskSchedule) => taskSchedule.nextDate <= today)

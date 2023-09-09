@@ -1,11 +1,17 @@
 import { DateTime, Duration } from 'luxon';
 import { safeParse } from 'valibot';
-import { precacheAndRoute } from 'workbox-precaching';
+import { clientsClaim, skipWaiting } from 'workbox-core';
+import { cleanupOutdatedCaches, precacheAndRoute } from 'workbox-precaching';
 
 import { NotificationSchedulesMapper, type NotificationSchedule } from '##/domain/schema';
 
 declare let self: ServiceWorkerGlobalScope;
 
+// Workbox によって適切なイベントハンドラが自動的に登録されるため、トップレベルで呼び出してよい
+skipWaiting();
+clientsClaim();
+
+cleanupOutdatedCaches();
 precacheAndRoute(self.__WB_MANIFEST);
 
 const INTERVAL = Duration.fromObject({
@@ -25,6 +31,7 @@ self.addEventListener('message', (event) => {
   notificationSchedule = result.data;
 });
 
+// TODO: 本当は Push API を利用しないと適切に通知できないらしい
 setInterval(() => {
   const now = DateTime.now();
 

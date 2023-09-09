@@ -2,7 +2,7 @@ import { createStore } from 'jotai';
 import { DateTime, Duration } from 'luxon';
 
 import {
-  completeTaskAtom,
+  completeTasksAtom,
   createTaskScheduleAtom,
   selectCompletedTasksAtom,
   taskScheduleSelectorAtom,
@@ -16,7 +16,11 @@ describe('createTaskScheduleAtom', () => {
   test('TaskSchedule を新規作成できる', () => {
     const store = createStore();
     const nextDate = DateTime.fromISO('2023-09-01');
-    const newTaskSchedule = { title: 'test task', nextDate: nextDate, interval: Duration.fromObject({ days: 7 }) };
+    const newTaskSchedule = {
+      title: 'test task',
+      nextDate: nextDate,
+      interval: Duration.fromObject({ days: 7 }),
+    };
     const id = store.set(createTaskScheduleAtom, newTaskSchedule);
 
     const selector = store.get(taskScheduleSelectorAtom);
@@ -40,11 +44,15 @@ describe('completeTaskAtom', () => {
   test('TaskSchedule を予定通りに完了した場合', () => {
     const store = createStore();
     const nextDate = DateTime.fromISO('2023-09-01');
-    const newTaskSchedule = { title: 'test task', nextDate: nextDate, interval: Duration.fromObject({ days: 7 }) };
+    const newTaskSchedule = {
+      title: 'test task',
+      nextDate: nextDate,
+      interval: Duration.fromObject({ days: 7 }),
+    };
     const id = store.set(createTaskScheduleAtom, newTaskSchedule);
 
     jest.useFakeTimers({ now: DateTime.fromISO('2023-09-01').toMillis() });
-    store.set(completeTaskAtom, id);
+    const [completedId] = store.set(completeTasksAtom, [id]);
 
     const selector = store.get(taskScheduleSelectorAtom);
     const actual = selector(id);
@@ -60,6 +68,7 @@ describe('completeTaskAtom', () => {
     const completedTasks = store.get(selectCompletedTasksAtom);
     expect(completedTasks).toStrictEqual([
       {
+        id: completedId,
         title: 'test task',
         scheduledDate: DateTime.fromISO('2023-09-01'),
         completedDate: DateTime.fromISO('2023-09-01'),
@@ -70,11 +79,15 @@ describe('completeTaskAtom', () => {
   test('TaskSchedule を予定より遅れて完了した場合', () => {
     const store = createStore();
     const nextDate = DateTime.fromISO('2023-09-01');
-    const newTaskSchedule = { title: 'test task', nextDate: nextDate, interval: Duration.fromObject({ days: 7 }) };
+    const newTaskSchedule = {
+      title: 'test task',
+      nextDate: nextDate,
+      interval: Duration.fromObject({ days: 7 }),
+    };
     const id = store.set(createTaskScheduleAtom, newTaskSchedule);
 
     jest.useFakeTimers({ now: DateTime.fromISO('2023-09-02').toMillis() });
-    store.set(completeTaskAtom, id);
+    const [completedId] = store.set(completeTasksAtom, [id]);
 
     const selector = store.get(taskScheduleSelectorAtom);
     const actual = selector(id);
@@ -90,6 +103,7 @@ describe('completeTaskAtom', () => {
     const completedTasks = store.get(selectCompletedTasksAtom);
     expect(completedTasks).toStrictEqual([
       {
+        id: completedId,
         title: 'test task',
         scheduledDate: DateTime.fromISO('2023-09-01'),
         completedDate: DateTime.fromISO('2023-09-02'),
@@ -109,7 +123,7 @@ describe('completeTaskAtom', () => {
     const id = store.set(createTaskScheduleAtom, newTaskSchedule);
 
     jest.useFakeTimers({ now: DateTime.fromISO('2023-09-02').toMillis() });
-    store.set(completeTaskAtom, id);
+    const [completedId] = store.set(completeTasksAtom, [id]);
 
     const selector = store.get(taskScheduleSelectorAtom);
     const actual = selector(id);
@@ -125,6 +139,7 @@ describe('completeTaskAtom', () => {
     const completedTasks = store.get(selectCompletedTasksAtom);
     expect(completedTasks).toStrictEqual([
       {
+        id: completedId,
         title: 'test task',
         scheduledDate: DateTime.fromISO('2023-09-01'),
         completedDate: DateTime.fromISO('2023-09-02'),

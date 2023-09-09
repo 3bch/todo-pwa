@@ -3,6 +3,10 @@ import { defineConfig } from 'vite';
 import { VitePWA } from 'vite-plugin-pwa';
 
 export default defineConfig({
+  base: '/todo-pwa/',
+  build: {
+    sourcemap: true,
+  },
   plugins: [
     react(),
     VitePWA({
@@ -14,6 +18,7 @@ export default defineConfig({
         type: 'module',
       },
       registerType: 'autoUpdate',
+      injectRegister: 'inline',
       manifest: {
         name: '定期タスク管理',
         short_name: '定期タスク管理',
