@@ -1,5 +1,6 @@
 import { valibotResolver } from '@hookform/resolvers/valibot';
 import { useSetAtom } from 'jotai';
+import { DateTime } from 'luxon';
 import { useCallback, type FC } from 'react';
 import { useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
@@ -18,7 +19,7 @@ export const CreateSchedulePage: FC = () => {
   } = useForm<TaskScheduleForm>({
     defaultValues: {
       title: '',
-      nextDate: '2023-09-05',
+      nextDate: DateTime.now().toISODate() ?? undefined,
       interval: {
         value: 1,
         unit: 'weeks',

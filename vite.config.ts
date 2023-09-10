@@ -30,7 +30,7 @@ export default defineConfig({
         display: 'standalone',
         icons: [
           {
-            src: '/icon512.png',
+            src: '/todo-pwa/icon512.png',
             size: '512x512',
           },
         ],
