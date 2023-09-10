@@ -32,9 +32,12 @@ export const CreateSchedulePage: FC = () => {
   const navigate = useNavigate();
 
   const onSuccess = useCallback(
-    (data: TaskScheduleForm) => {
+    async (data: TaskScheduleForm) => {
       const result = parse(TaskScheduleFormSchema, data);
       createTaskSchedule(result);
+      if (Notification.permission === 'default') {
+        await Notification.requestPermission();
+      }
       navigate('/schedules');
     },
     [createTaskSchedule, navigate],
