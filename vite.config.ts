@@ -24,7 +24,7 @@ export default defineConfig({
         short_name: '定期タスク管理',
         lang: 'ja',
         description: '定期的なタスクを管理するためのアプリケーション',
-        start_url: './index.html',
+        start_url: './',
         background_color: '#2f3d58',
         theme_color: '#2f3d58',
         display: 'standalone',
