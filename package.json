@@ -8,7 +8,7 @@
     "build": "run-s build:vite build:cp",
     "build:vite": "vite build",
     "build:cp": "run-p build:cp:*",
-    "build:cp:dist": "cpx -C dist/**/* .vercel/output/static",
+    "build:cp:dist": "cpx -C \"dist/**/*\" .vercel/output/static",
     "build:cp:config": "node -e \"require('fs').copyFileSync('vercel.config.json', '.vercel/output/config.json')\"",
     "lint": "run-p lint:*",
     "lint:type": "tsc",
