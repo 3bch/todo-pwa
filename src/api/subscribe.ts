@@ -10,7 +10,7 @@ import { PushSubscriptionSchema } from '##/domain/schema';
 
 const app = new Hono().basePath('/api');
 
-app.get('/subscribe', async (c) => {
+app.post('/subscribe', async (c) => {
   const body = (await c.req.json()) as unknown;
   const parsed = safeParse(PushSubscriptionSchema, body);
   if (!parsed.success) {

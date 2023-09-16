@@ -8,7 +8,7 @@ import { PushSubscriptionSchema } from '##/domain/schema';
 
 const app = new Hono().basePath('/api');
 
-app.get('/push', async (c) => {
+app.all('/push', async (c) => {
   webpush.setVapidDetails(
     process.env.VAPID_SUBJECT ?? '',
     process.env.VITE_VAPID_PUBLIC_KEY ?? '',
