@@ -5,7 +5,7 @@
   "scripts": {
     "prepare": "npx only-allow pnpm",
     "dev": "vite --host",
-    "build": "tsc && vite build",
+    "build": "vite build",
     "lint": "run-p lint:*",
     "lint:type": "tsc",
     "lint:format": "prettier --check .",
@@ -29,11 +29,13 @@
   },
   "volta": {
     "node": "18.17.1",
-    "pnpm": "8.7.4"
+    "pnpm": "8.7.5"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.3.1",
+    "@vercel/kv": "^0.2.2",
     "clsx": "^2.0.0",
+    "hono": "^3.6.0",
     "immer": "^10.0.2",
     "jotai": "^2.4.0",
     "jotai-immer": "^0.2.0",
@@ -44,15 +46,19 @@
     "react-router-dom": "^6.15.0",
     "uuid": "^9.0.0",
     "valibot": "^0.12.0",
+    "vercel": "^32.2.3",
+    "web-push": "^3.6.5",
     "workbox-core": "^7.0.0",
     "workbox-precaching": "^7.0.0"
   },
   "devDependencies": {
+    "@cloudflare/workers-types": "^4.20230904.0",
     "@types/jest": "^29.5.4",
     "@types/luxon": "^3.3.1",
     "@types/react": "^18.2.20",
     "@types/react-dom": "^18.2.7",
     "@types/uuid": "^9.0.3",
+    "@types/web-push": "^3.6.0",
     "@typescript-eslint/eslint-plugin": "^6.4.0",
     "@typescript-eslint/parser": "^6.4.0",
     "@vite-pwa/assets-generator": "^0.0.10",
@@ -76,6 +82,7 @@
     "ts-node": "^10.9.1",
     "typescript": "^5.1.6",
     "vite": "^4.4.9",
-    "vite-plugin-pwa": "^0.16.4"
+    "vite-plugin-pwa": "^0.16.4",
+    "vite-plugin-vercel": "^0.3.1"
   }
 }

@@ -8,6 +8,7 @@ import { parse } from 'valibot';
 
 import { createTaskScheduleAtom } from '##/domain/atom';
 import { TaskScheduleFormSchema, type TaskScheduleForm } from '##/domain/schema';
+import { subscribe } from '##/domain/subscribe';
 import { HeaderButton } from '##/view/common/HeaderButton';
 
 export const CreateSchedulePage: FC = () => {
@@ -36,9 +37,7 @@ export const CreateSchedulePage: FC = () => {
     async (data: TaskScheduleForm) => {
       const result = parse(TaskScheduleFormSchema, data);
       createTaskSchedule(result);
-      if (Notification.permission === 'default') {
-        await Notification.requestPermission();
-      }
+      await subscribe();
       navigate('/schedules');
     },
     [createTaskSchedule, navigate],

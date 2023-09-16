@@ -1,3 +1,4 @@
+/.vercel/
 /dist/
 /dev-dist/
 /node_modules/

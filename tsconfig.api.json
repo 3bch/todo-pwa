@@ -1,19 +1,21 @@
 {
   "compilerOptions": {
+    "composite": true,
+
     "target": "ES2022",
     "useDefineForClassFields": true,
-    "lib": ["ES2022", "DOM", "DOM.Iterable", "WebWorker"],
-    "module": "ESNext",
+    "lib": ["ES2022"],
+    "module": "Node16",
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
 
-    "moduleResolution": "Bundler",
+    "moduleResolution": "Node16",
+    "emitDeclarationOnly": true,
     "allowImportingTsExtensions": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
     "esModuleInterop": true,
-    "noEmit": true,
-    "jsx": "react-jsx",
+    "jsx": "preserve",
 
     "strict": true,
     "noImplicitReturns": true,
@@ -24,17 +26,7 @@
     "baseUrl": "./",
     "paths": {
       "##/*": ["src/*"]
-    },
-
-    "types": ["vite/client", "jest"]
-  },
-  "include": ["src/**/*"],
-  "references": [
-    {
-      "path": "./tsconfig.node.json"
-    },
-    {
-      "path": "./tsconfig.api.json"
     }
-  ]
+  },
+  "include": ["api/**/*"]
 }

@@ -1,11 +1,7 @@
 import { createStore } from 'jotai';
 import { Duration } from 'luxon';
 
-import {
-  selectNotificationScheduleAtom,
-  selectTodoTasksAtom,
-  updateTodayAtom,
-} from '##/domain/atom';
+import { selectNotificationScheduleAtom, updateTodayAtom } from '##/domain/atom';
 
 const INTERVAL = Duration.fromObject({
   minutes: 5,
@@ -22,11 +18,6 @@ export function createDomainStore() {
     // 状態が更新されるごとに ServiceWorker に状態を送る
     store.sub(selectNotificationScheduleAtom, () => {
       registration.active?.postMessage(store.get(selectNotificationScheduleAtom));
-    });
-
-    // TODO: ServiceWorker 側で設定すべきかも？
-    store.sub(selectTodoTasksAtom, () => {
-      void navigator.setAppBadge(store.get(selectTodoTasksAtom).length);
     });
   });
 

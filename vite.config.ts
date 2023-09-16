@@ -1,6 +1,14 @@
 import react from '@vitejs/plugin-react';
 import { defineConfig } from 'vite';
 import { VitePWA } from 'vite-plugin-pwa';
+import vercel from 'vite-plugin-vercel';
+
+declare module 'vite' {
+  // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
+  interface UserConfig {
+    vercel?: unknown;
+  }
+}
 
 export default defineConfig({
   base: '/todo-pwa/',
@@ -9,6 +17,7 @@ export default defineConfig({
   },
   plugins: [
     react(),
+    vercel(),
     VitePWA({
       strategies: 'injectManifest',
       srcDir: 'src',
@@ -55,4 +64,28 @@ export default defineConfig({
       },
     }),
   ],
+  vercel: {
+    rewrites: [
+      {
+        source: '/',
+        destination: '/index.html',
+      },
+      {
+        source: '/schedules',
+        destination: '/index.html',
+      },
+      {
+        source: '/schedules/new',
+        destination: '/index.html',
+      },
+      {
+        source: '/schedules/:id',
+        destination: '/index.html',
+      },
+      {
+        source: '/completedTasks',
+        destination: '/index.html',
+      },
+    ],
+  },
 });
