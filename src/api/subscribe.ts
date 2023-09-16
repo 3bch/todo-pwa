@@ -6,7 +6,7 @@ import { handle } from 'hono/vercel';
 import { safeParse } from 'valibot';
 import webpush from 'web-push';
 
-import { PushSubscriptionSchema } from '##/domain/schema.ts';
+import { PushSubscriptionSchema } from '##/domain/schema';
 
 const app = new Hono().basePath('/api');
 

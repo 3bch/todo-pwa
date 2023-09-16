@@ -71,7 +71,7 @@
   },
   "overrides": [
     {
-      "files": ["vite.config.ts", "api/*.ts"],
+      "files": ["vite.config.ts", "src/api/*.ts"],
       "env": {
         "node": true
       },

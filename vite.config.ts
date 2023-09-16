@@ -1,7 +1,14 @@
 import react from '@vitejs/plugin-react';
 import { defineConfig } from 'vite';
 import { VitePWA } from 'vite-plugin-pwa';
-import vercel from 'vite-plugin-vercel';
+import vercel, { type ViteVercelConfig } from 'vite-plugin-vercel';
+
+declare module 'vite' {
+  // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
+  interface UserConfig {
+    vercel?: ViteVercelConfig;
+  }
+}
 
 export default defineConfig({
   build: {
@@ -56,4 +63,16 @@ export default defineConfig({
       },
     }),
   ],
+  vercel: {
+    additionalEndpoints: [
+      {
+        source: './src/api/push.ts',
+        destination: '/api/push',
+      },
+      {
+        source: './src/api/subscribe.ts',
+        destination: '/api/subscribe',
+      },
+    ],
+  },
 });
