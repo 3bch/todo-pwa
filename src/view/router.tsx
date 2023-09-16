@@ -7,35 +7,30 @@ import { SchedulesPage } from '##/view/page/SchedulesPage';
 import { ToDoPage } from '##/view/page/ToDoPage';
 import { UpdateSchedulePage } from '##/view/page/UpdateSchedulePage';
 
-export const router = createBrowserRouter(
-  [
-    {
-      element: <PageLayout />,
-      children: [
-        {
-          path: '/',
-          element: <ToDoPage />,
-        },
-        {
-          path: '/schedules',
-          element: <SchedulesPage />,
-        },
-        {
-          path: '/completedTasks',
-          element: <CompletedTasksPage />,
-        },
-        {
-          path: '/schedules/new',
-          element: <CreateSchedulePage />,
-        },
-        {
-          path: '/schedules/:id',
-          element: <UpdateSchedulePage />,
-        },
-      ],
-    },
-  ],
+export const router = createBrowserRouter([
   {
-    basename: '/todo-pwa',
+    element: <PageLayout />,
+    children: [
+      {
+        path: '/',
+        element: <ToDoPage />,
+      },
+      {
+        path: '/schedules',
+        element: <SchedulesPage />,
+      },
+      {
+        path: '/completedTasks',
+        element: <CompletedTasksPage />,
+      },
+      {
+        path: '/schedules/new',
+        element: <CreateSchedulePage />,
+      },
+      {
+        path: '/schedules/:id',
+        element: <UpdateSchedulePage />,
+      },
+    ],
   },
-);
+]);
