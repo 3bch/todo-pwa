@@ -1,0 +1,39 @@
+{
+  "version": 3,
+  "routes": [
+    {
+      "handle": "filesystem"
+    },
+    {
+      "src": "^/$",
+      "dest": "/index.html",
+      "check": true
+    },
+    {
+      "src": "^/schedules$",
+      "dest": "/index.html",
+      "check": true
+    },
+    {
+      "src": "^/schedules/new$",
+      "dest": "/index.html",
+      "check": true
+    },
+    {
+      "src": "^/schedules/[^/]+$",
+      "dest": "/index.html",
+      "check": true
+    },
+    {
+      "src": "^/completedTasks$",
+      "dest": "/index.html",
+      "check": true
+    }
+  ],
+  "crons": [
+    {
+      "path": "/api/push",
+      "schedule": "0 * * * *"
+    }
+  ]
+}
