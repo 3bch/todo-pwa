@@ -151,3 +151,11 @@ export const TaskScheduleFormSchema = object({
 });
 
 export type TaskScheduleForm = Input<typeof TaskScheduleFormSchema>;
+
+export const PushSubscriptionSchema = object({
+  endpoint: string(),
+  keys: object({
+    auth: string(),
+    p256dh: string(),
+  }),
+});

@@ -15,7 +15,7 @@ import { atomWithValidatedStorage } from '##/domain/util/storage';
 const taskSchedulesAtom = atomWithValidatedStorage('taskSchedules', TaskSchedulesMapper, {});
 const completedTasksAtom = atomWithValidatedStorage('completedTasks', CompletedTasksMapper, []);
 const settingAtom = atomWithValidatedStorage('setting', SettingMapper, {
-  notificationTime: Duration.fromISOTime('07:00'),
+  notificationTime: Duration.fromISOTime('12:00'),
 });
 const todayAtom = atom(DateTime.now().set({ hour: 0, minute: 0, second: 0, millisecond: 0 }));
 
