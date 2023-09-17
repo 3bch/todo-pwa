@@ -1,33 +1,24 @@
 {
-  "version": 3,
-  "routes": [
+  "rewrites": [
     {
-      "handle": "filesystem"
+      "source": "/",
+      "destination": "/index.html"
     },
     {
-      "src": "^/$",
-      "dest": "/index.html",
-      "check": true
+      "source": "/schedules",
+      "destination": "/index.html"
     },
     {
-      "src": "^/schedules$",
-      "dest": "/index.html",
-      "check": true
+      "source": "/schedules/new",
+      "destination": "/index.html"
     },
     {
-      "src": "^/schedules/new$",
-      "dest": "/index.html",
-      "check": true
+      "source": "/schedules/:id",
+      "destination": "/index.html"
     },
     {
-      "src": "^/schedules/[^/]+$",
-      "dest": "/index.html",
-      "check": true
-    },
-    {
-      "src": "^/completedTasks$",
-      "dest": "/index.html",
-      "check": true
+      "source": "/completedTasks",
+      "destination": "/index.html"
     }
   ],
   "crons": [
