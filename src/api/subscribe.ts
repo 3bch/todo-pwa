@@ -1,8 +1,6 @@
-/* eslint-disable @typescript-eslint/no-unsafe-return */
-
+import { handle } from '@hono/node-server/vercel';
 import { kv } from '@vercel/kv';
 import { Hono } from 'hono';
-import { handle } from 'hono/vercel';
 import { safeParse } from 'valibot';
 import webpush from 'web-push';
 

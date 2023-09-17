@@ -5,6 +5,9 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
+  '@hono/node-server':
+    specifier: ^1.1.1
+    version: 1.1.1
   '@hookform/resolvers':
     specifier: ^3.3.1
     version: 3.3.1(react-hook-form@7.46.0)
@@ -2139,6 +2142,11 @@ packages:
     resolution: {integrity: sha512-P6omY1zv5MItm93kLM8s2vr1HICJH8v0dvddDhysbIuZ+vcjOHg5Zbkf1mTkcmi2JA9oBG2anOkRnW8WJTS8Og==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     dev: true
+
+  /@hono/node-server@1.1.1:
+    resolution: {integrity: sha512-0ZfrcW8Y+TAGNzKGoDB1iQ7Gv7uGsGDOYlz7nckXcHRpK60Oxuz1ttiFmdHYmI6kGO+/VJ8Iy58LDhoTPqkiow==}
+    engines: {node: '>=18.0.0'}
+    dev: false
 
   /@hookform/resolvers@3.3.1(react-hook-form@7.46.0):
     resolution: {integrity: sha512-K7KCKRKjymxIB90nHDQ7b9nli474ru99ZbqxiqDAWYsYhOsU3/4qLxW91y+1n04ic13ajjZ66L3aXbNef8PELQ==}
