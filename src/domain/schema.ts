@@ -4,7 +4,6 @@ import {
   integer,
   isoDate,
   isoDateTime,
-  isoTime,
   literal,
   maxLength,
   maxValue,
@@ -90,25 +89,6 @@ export const CompletedTasksMapper: JsonMapper<typeof CompletedTasksSchema> = {
   toInput: (value) => value.map(toInputFromCompletedTask),
 };
 
-const SettingSchema = object({
-  notificationTime: transform(string([isoTime()]), (value) => Duration.fromISOTime(value)),
-});
-
-export type Setting = Output<typeof SettingSchema>;
-
-function toInputFromSetting(value: Setting): Input<typeof SettingSchema> {
-  return {
-    notificationTime: value.notificationTime.toISOTime({
-      suppressSeconds: true,
-    })!,
-  };
-}
-
-export const SettingMapper: JsonMapper<typeof SettingSchema> = {
-  schema: SettingSchema,
-  toInput: toInputFromSetting,
-};
-
 const NotificationScheduleSchema = record(
   string([isoDateTime()]),
   array(
@@ -151,11 +131,3 @@ export const TaskScheduleFormSchema = object({
 });
 
 export type TaskScheduleForm = Input<typeof TaskScheduleFormSchema>;
-
-export const PushSubscriptionSchema = object({
-  endpoint: string(),
-  keys: object({
-    auth: string(),
-    p256dh: string(),
-  }),
-});

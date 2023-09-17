@@ -1,22 +1,13 @@
 import { atom } from 'jotai';
 import { withImmer } from 'jotai-immer';
-import { DateTime, Duration } from 'luxon';
+import { DateTime } from 'luxon';
 import { v4 as uuid } from 'uuid';
 
-import {
-  CompletedTasksMapper,
-  SettingMapper,
-  TaskSchedulesMapper,
-  type NotificationSchedule,
-  type TaskSchedule,
-} from '##/domain/schema';
+import { CompletedTasksMapper, TaskSchedulesMapper, type TaskSchedule } from '##/domain/schema';
 import { atomWithValidatedStorage } from '##/domain/util/storage';
 
 const taskSchedulesAtom = atomWithValidatedStorage('taskSchedules', TaskSchedulesMapper, {});
 const completedTasksAtom = atomWithValidatedStorage('completedTasks', CompletedTasksMapper, []);
-const settingAtom = atomWithValidatedStorage('setting', SettingMapper, {
-  notificationTime: Duration.fromISOTime('12:00'),
-});
 const todayAtom = atom(DateTime.now().set({ hour: 0, minute: 0, second: 0, millisecond: 0 }));
 
 export type NewTaskSchedule = Omit<TaskSchedule, 'id'>;
@@ -127,23 +118,3 @@ export const selectTodoTasksAtom = atom((get) => {
 });
 
 export const selectCompletedTasksAtom = atom((get) => get(completedTasksAtom));
-
-export const selectNotificationScheduleAtom = atom((get) => {
-  const { notificationTime } = get(settingAtom);
-  const taskSchedules = get(taskSchedulesAtom);
-
-  const result: NotificationSchedule = {};
-
-  for (const taskSchedule of Object.values(taskSchedules)) {
-    const notificationDateTime = taskSchedule.nextDate.plus(notificationTime).toISO() ?? '';
-    if (result[notificationDateTime] === undefined) {
-      result[notificationDateTime] = [];
-    }
-    result[notificationDateTime]!.push({
-      id: taskSchedule.id,
-      title: taskSchedule.title,
-    });
-  }
-
-  return result;
-});

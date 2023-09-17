@@ -1,43 +1,37 @@
-import { handle } from '@hono/node-server/vercel';
 import { kv } from '@vercel/kv';
-import { Hono } from 'hono';
-import { object, safeParse, string } from 'valibot';
-import webpush from 'web-push';
+import { safeParse } from 'valibot';
 
-const PushSubscriptionSchema = object({
-  endpoint: string(),
-  keys: object({
-    auth: string(),
-    p256dh: string(),
-  }),
-});
+import { PushSubscriptionSchema } from './_schema.mjs';
+import { webpush } from './_webpush.mjs';
 
-const app = new Hono().basePath('/api');
-
-app.post('/subscribe', async (c) => {
-  const body = await c.req.json();
+export default async function handler(request, response) {
+  const body = request.body;
   const parsed = safeParse(PushSubscriptionSchema, body);
-  if (!parsed.success) {
-    c.status(400);
-    return c.json(parsed.error);
-  }
-  const subscription = parsed.data;
 
-  // 一度通知し、失敗したら登録しない
+  if (!parsed.success) {
+    response.status(400).json(parsed.error);
+    return;
+  }
+
+  const subscription = parsed.data;
+  console.log(subscription);
+
   try {
     await webpush.sendNotification(subscription);
   } catch (e) {
-    // TODO: 通知に失敗したら subscription を削除する
     console.error(e);
-    c.status(400);
-    return c.text('Illegal subscription');
+    response.status(400).send('FAILD: Send notification');
+    return;
   }
 
   // TODO: 有効期限をつけておき、適度に更新させるようにする
-  await kv.set(`subscriptions:${subscription.endpoint}`, subscription);
+  try {
+    await kv.set(`subscriptions:${subscription.endpoint}`, subscription);
+  } catch (e) {
+    console.error(e);
+    response.status(500).send('FAILED: Save subscription');
+    return;
+  }
 
-  c.status(200);
-  return c.text('ok');
-});
-
-export default handle(app);
+  response.status(201).send('');
+}

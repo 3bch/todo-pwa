@@ -1,33 +1,18 @@
-import { handle } from '@hono/node-server/vercel';
 import { kv } from '@vercel/kv';
-import { Hono } from 'hono';
-import { object, safeParse, string } from 'valibot';
-import webpush from 'web-push';
+import { safeParse } from 'valibot';
 
-const PushSubscriptionSchema = object({
-  endpoint: string(),
-  keys: object({
-    auth: string(),
-    p256dh: string(),
-  }),
-});
+import { PushSubscriptionSchema } from './_schema.mjs';
+import { webpush } from './_webpush.mjs';
 
-const app = new Hono().basePath('/api');
-
-app.all('/push', async (c) => {
-  webpush.setVapidDetails(
-    process.env.VAPID_SUBJECT ?? '',
-    process.env.VITE_VAPID_PUBLIC_KEY ?? '',
-    process.env.VAPID_PRIVATE_KEY ?? '',
-  );
-
+export default async function handler(request, response) {
   const keys = await kv.keys('subscriptions:*');
+
   let count = 0;
   for (const key of keys) {
     const value = await kv.get(key);
     const parsed = safeParse(PushSubscriptionSchema, value);
     if (!parsed.success) {
-      console.warn(`invalid subscription: [${key}]`, value, parsed.error);
+      console.warn(`invalid subscription: [${key}]`, parsed.error);
       await kv.del(key);
       continue;
     }
@@ -35,16 +20,13 @@ app.all('/push', async (c) => {
 
     try {
       await webpush.sendNotification(subscription);
+      console.info(`push: [${key}]`);
       count += 1;
     } catch (e) {
-      // TODO: 通知に失敗したら subscription を削除する
       console.error(e);
+      await kv.del(key);
     }
   }
 
-  c.status(200);
-
-  return c.text(`push [${count}]`);
-});
-
-export default handle(app);
+  response.status(200).send(`push count: ${count}`);
+}
