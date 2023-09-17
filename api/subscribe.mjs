@@ -15,7 +15,7 @@ const PushSubscriptionSchema = object({
 const app = new Hono().basePath('/api');
 
 app.post('/subscribe', async (c) => {
-  const body = (await c.req.json()) as unknown;
+  const body = await c.req.json();
   const parsed = safeParse(PushSubscriptionSchema, body);
   if (!parsed.success) {
     c.status(400);
