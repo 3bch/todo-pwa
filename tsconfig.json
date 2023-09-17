@@ -28,10 +28,13 @@
 
     "types": ["vite/client", "jest"]
   },
-  "include": ["src/**/*", "api/**/*"],
+  "include": ["src/**/*"],
   "references": [
     {
       "path": "./tsconfig.node.json"
+    },
+    {
+      "path": "./tsconfig.api.json"
     }
   ]
 }

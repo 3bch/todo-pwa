@@ -5,11 +5,7 @@
   "scripts": {
     "prepare": "npx only-allow pnpm",
     "dev": "vite --host",
-    "build": "run-s build:vite build:cp",
-    "build:vite": "vite build",
-    "build:cp": "run-p build:cp:*",
-    "build:cp:dist": "cpx -C \"dist/**/*\" .vercel/output/static",
-    "build:cp:config": "node -e \"require('fs').copyFileSync('vercel.config.json', '.vercel/output/config.json')\"",
+    "build": "vite build",
     "lint": "run-p lint:*",
     "lint:type": "tsc",
     "lint:format": "prettier --check .",
@@ -89,7 +85,6 @@
     "ts-node": "^10.9.1",
     "typescript": "^5.1.6",
     "vite": "^4.4.9",
-    "vite-plugin-pwa": "^0.16.4",
-    "vite-plugin-vercel": "^0.3.1"
+    "vite-plugin-pwa": "^0.16.4"
   }
 }

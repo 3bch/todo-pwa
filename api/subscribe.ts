@@ -1,10 +1,16 @@
 import { handle } from '@hono/node-server/vercel';
 import { kv } from '@vercel/kv';
 import { Hono } from 'hono';
-import { safeParse } from 'valibot';
+import { object, safeParse, string } from 'valibot';
 import webpush from 'web-push';
 
-import { PushSubscriptionSchema } from '##/domain/schema';
+const PushSubscriptionSchema = object({
+  endpoint: string(),
+  keys: object({
+    auth: string(),
+    p256dh: string(),
+  }),
+});
 
 const app = new Hono().basePath('/api');
 

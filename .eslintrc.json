@@ -71,12 +71,13 @@
   },
   "overrides": [
     {
-      "files": ["vite.config.ts", "src/api/*.ts"],
+      "files": ["vite.config.ts", "api/*.ts"],
       "env": {
         "node": true
       },
       "rules": {
-        "import/no-default-export": "off"
+        "import/no-default-export": "off",
+        "@typescript-eslint/no-unsafe-return": "off"
       }
     }
   ],
