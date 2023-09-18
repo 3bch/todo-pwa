@@ -35,7 +35,7 @@ self.addEventListener('push', (event) => {
   const titles = [];
 
   for (const schedule of schedules) {
-    if (schedule.nextDate.diff(today).days < 1) {
+    if (schedule.nextDate.diff(today).days === 0) {
       titles.push(schedule.title);
     }
   }
