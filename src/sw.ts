@@ -42,11 +42,7 @@ self.addEventListener('push', (event) => {
 
   console.log('notification', titles);
 
-  event.waitUntil(
-    self.registration.showNotification('今日のタスク', {
-      body: titles.join(', '),
-    }),
-  );
+  event.waitUntil(self.registration.showNotification(`今日のタスク: ${titles.join(',')}`));
 
   const keepSubscription = async () => {
     const subscription = await self.registration.pushManager.getSubscription();
@@ -60,4 +56,20 @@ self.addEventListener('push', (event) => {
   };
 
   event.waitUntil(keepSubscription());
+});
+
+self.addEventListener('notificationclick', (event) => {
+  event.notification.close();
+
+  const open = async () => {
+    const clients = await self.clients.matchAll({ type: 'window' });
+    for (const client of clients) {
+      if (client.url === '/') {
+        await client.focus();
+        return;
+      }
+    }
+    await self.clients.openWindow('/');
+  };
+  event.waitUntil(open());
 });
