@@ -64,7 +64,8 @@ self.addEventListener('notificationclick', (event) => {
   const open = async () => {
     const clients = await self.clients.matchAll({ type: 'window' });
     for (const client of clients) {
-      if (client.url === '/') {
+      const url = new URL(client.url);
+      if (url.pathname === '/') {
         await client.focus();
         return;
       }
