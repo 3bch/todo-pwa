@@ -47,7 +47,7 @@ export const TaskScheduleSchema = object({
 
 export type TaskSchedule = Output<typeof TaskScheduleSchema>;
 
-function toInputFromTaskSchedule(value: TaskSchedule): Input<typeof TaskScheduleSchema> {
+export function toInputFromTaskSchedule(value: TaskSchedule): Input<typeof TaskScheduleSchema> {
   return {
     ...value,
     nextDate: value.nextDate.toISODate()!,

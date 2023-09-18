@@ -4,12 +4,16 @@ import { DateTime } from 'luxon';
 import { useCallback, useState, type FC } from 'react';
 import { Link } from 'react-router-dom';
 
-import { completeTaskAtom, selectTodoTasksAtom } from '##/domain/atom';
+import { completeTaskAtom, selectTodoTasksAtom, updateTodayAtom } from '##/domain/atom';
 import { HeaderButton } from '##/view/common/HeaderButton';
 
 export const ToDoPage: FC = () => {
   const todoTasks = useAtomValue(selectTodoTasksAtom);
   const completeTask = useSetAtom(completeTaskAtom);
+  const updateToday = useSetAtom(updateTodayAtom);
+
+  // 今日の日付を更新する
+  updateToday();
 
   // TODO: nextDate と経過日数を表示する
   // TODO: 完了ボタンを実装する

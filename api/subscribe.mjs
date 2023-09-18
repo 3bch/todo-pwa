@@ -2,7 +2,9 @@ import { kv } from '@vercel/kv';
 import { safeParse } from 'valibot';
 
 import { PushSubscriptionSchema } from './_schema.mjs';
-import { webpush } from './_webpush.mjs';
+
+// 期限は 5 日
+const SUBSCRIPTION_EXPIRE = 60 * 60 * 24 * 5;
 
 export default async function handler(request, response) {
   const body = request.body;
@@ -14,19 +16,12 @@ export default async function handler(request, response) {
   }
 
   const subscription = parsed.data;
-  console.log(subscription);
+  console.log('save subscription', subscription);
 
   try {
-    await webpush.sendNotification(subscription);
-  } catch (e) {
-    console.error(e);
-    response.status(400).send('FAILD: Send notification');
-    return;
-  }
-
-  // TODO: 有効期限をつけておき、適度に更新させるようにする
-  try {
-    await kv.set(`subscriptions:${subscription.endpoint}`, subscription);
+    await kv.set(`subscriptions:${subscription.endpoint}`, subscription, {
+      ex: SUBSCRIPTION_EXPIRE,
+    });
   } catch (e) {
     console.error(e);
     response.status(500).send('FAILED: Save subscription');
