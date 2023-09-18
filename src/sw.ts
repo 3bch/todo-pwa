@@ -42,7 +42,13 @@ self.addEventListener('push', (event) => {
 
   console.log('notification', titles);
 
-  event.waitUntil(self.registration.showNotification(`今日のタスク: ${titles.join(',')}`));
+  if (0 < titles.length) {
+    event.waitUntil(
+      self.registration.showNotification('今日のタスク', {
+        body: titles.join(', '),
+      }),
+    );
+  }
 
   const keepSubscription = async () => {
     const subscription = await self.registration.pushManager.getSubscription();
