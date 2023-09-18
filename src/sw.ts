@@ -1,48 +1,76 @@
 import { DateTime } from 'luxon';
-import { safeParse } from 'valibot';
-import { clientsClaim, skipWaiting } from 'workbox-core';
+import { array, safeParse } from 'valibot';
+import { clientsClaim } from 'workbox-core';
 import { cleanupOutdatedCaches, precacheAndRoute } from 'workbox-precaching';
 
-import { NotificationSchedulesMapper, type NotificationSchedule } from '##/domain/schema';
+import { TaskScheduleSchema, type TaskSchedule } from '##/domain/schema';
 
 declare let self: ServiceWorkerGlobalScope;
 
-// Workbox によって適切なイベントハンドラが自動的に登録されるため、トップレベルで呼び出してよい
-skipWaiting();
 clientsClaim();
+
+self.addEventListener('install', () => {
+  void self.skipWaiting();
+});
 
 cleanupOutdatedCaches();
 precacheAndRoute(self.__WB_MANIFEST);
 
-let notificationSchedule: NotificationSchedule = {};
-let prevDateTime = DateTime.now();
+let schedules: TaskSchedule[] = [];
+
+const MessageSchema = array(TaskScheduleSchema);
 
 self.addEventListener('message', (event) => {
-  const result = safeParse(NotificationSchedulesMapper.schema, event.data);
-  if (!result.success) {
-    console.warn('IGNORE: Illegal Message', result.error, event.data);
+  const parsed = safeParse(MessageSchema, event.data);
+  if (!parsed.success) {
+    console.error('ServiceWorker: invalid message', parsed.error);
     return;
   }
 
-  notificationSchedule = result.data;
+  schedules = parsed.data;
 });
 
 self.addEventListener('push', (event) => {
-  console.log('sw push evnet');
-  // TODO: 本来は localStorage の最新の値でチェックすべき
-  const now = DateTime.now();
+  const today = DateTime.now().set({ hour: 0, minute: 0, second: 0, millisecond: 0 });
+  const titles = [];
 
-  for (const [dateTime, tasks] of Object.entries(notificationSchedule)) {
-    const scheduled = DateTime.fromISO(dateTime);
-    if (prevDateTime < scheduled && scheduled <= now) {
-      const message = tasks.join(', ');
-      event.waitUntil(
-        self.registration.showNotification('本日のタスクの通知', {
-          body: message,
-        }),
-      );
+  for (const schedule of schedules) {
+    if (schedule.nextDate.diff(today).days < 1) {
+      titles.push(schedule.title);
     }
   }
 
-  prevDateTime = now;
+  console.log('notification', titles);
+
+  event.waitUntil(self.registration.showNotification(`今日のタスク: ${titles.join(',')}`));
+
+  const keepSubscription = async () => {
+    const subscription = await self.registration.pushManager.getSubscription();
+    await self.fetch('/api/subscribe', {
+      method: 'POST',
+      body: JSON.stringify(subscription),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+  };
+
+  event.waitUntil(keepSubscription());
+});
+
+self.addEventListener('notificationclick', (event) => {
+  event.notification.close();
+
+  const open = async () => {
+    const clients = await self.clients.matchAll({ type: 'window' });
+    for (const client of clients) {
+      const url = new URL(client.url);
+      if (url.pathname === '/') {
+        await client.focus();
+        return;
+      }
+    }
+    await self.clients.openWindow('/');
+  };
+  event.waitUntil(open());
 });

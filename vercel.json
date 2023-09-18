@@ -1,0 +1,30 @@
+{
+  "rewrites": [
+    {
+      "source": "/",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/schedules",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/schedules/new",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/schedules/:id",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/completedTasks",
+      "destination": "/index.html"
+    }
+  ],
+  "crons": [
+    {
+      "path": "/api/push",
+      "schedule": "0 7 * * *"
+    }
+  ]
+}
