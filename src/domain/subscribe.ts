@@ -17,20 +17,19 @@ export async function subscribe(): Promise<void> {
 
   const registration = await navigator.serviceWorker.ready;
 
-  const subscription = await registration.pushManager.getSubscription();
+  let subscription = await registration.pushManager.getSubscription();
 
-  if (subscription !== null) {
-    return;
+  if (subscription === null) {
+    subscription = await registration.pushManager.subscribe({
+      userVisibleOnly: true,
+      applicationServerKey: urlBase64ToUint8Array(import.meta.env.VITE_VAPID_PUBLIC_KEY),
+    });
   }
 
-  const newSubscription = await registration.pushManager.subscribe({
-    userVisibleOnly: true,
-    applicationServerKey: urlBase64ToUint8Array(import.meta.env.VITE_VAPID_PUBLIC_KEY),
-  });
-
+  // cache から消えている可能性があるので、毎度登録する
   await fetch('/api/subscribe', {
     method: 'POST',
-    body: JSON.stringify(newSubscription),
+    body: JSON.stringify(subscription),
     headers: {
       'Content-Type': 'application/json',
     },

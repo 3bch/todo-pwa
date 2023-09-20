@@ -11,6 +11,7 @@ import {
   updateTaskScheduleAtom,
 } from '##/domain/atom';
 import { TaskScheduleFormSchema, type TaskScheduleForm } from '##/domain/schema';
+import { subscribe } from '##/domain/subscribe';
 import { HeaderButton } from '##/view/common/HeaderButton';
 
 type DurationUnit = 'years' | 'months' | 'weeks' | 'days';
@@ -55,9 +56,10 @@ export const UpdateSchedulePage: FC = () => {
   const navigate = useNavigate();
 
   const onSuccess = useCallback(
-    (data: TaskScheduleForm) => {
+    async (data: TaskScheduleForm) => {
       const result = parse(TaskScheduleFormSchema, data);
       updateTaskSchedule({ ...result, id });
+      await subscribe();
       navigate('/schedules');
     },
     [updateTaskSchedule, id, navigate],
