@@ -32,10 +32,11 @@ self.addEventListener('message', (event) => {
 
 self.addEventListener('push', (event) => {
   const today = DateTime.now().set({ hour: 0, minute: 0, second: 0, millisecond: 0 });
-  const titles = [];
+  const tomorrow = today.plus({ days: 1 });
+  const titles: string[] = [];
 
   for (const schedule of schedules) {
-    if (schedule.nextDate.equals(today)) {
+    if (today <= schedule.nextDate && schedule.nextDate < tomorrow) {
       titles.push(schedule.title);
     }
   }
@@ -48,6 +49,8 @@ self.addEventListener('push', (event) => {
         body: titles.join(', '),
       }),
     );
+  } else {
+    event.waitUntil(self.registration.showNotification('今日のタスクはありません'));
   }
 
   const keepSubscription = async () => {
@@ -55,6 +58,17 @@ self.addEventListener('push', (event) => {
     await self.fetch('/api/subscribe', {
       method: 'POST',
       body: JSON.stringify(subscription),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    await self.fetch('/api/log', {
+      method: 'POST',
+      body: JSON.stringify({
+        endpoint: subscription?.endpoint,
+        titles,
+      }),
       headers: {
         'Content-Type': 'application/json',
       },
