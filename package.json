@@ -29,12 +29,13 @@
   },
   "volta": {
     "node": "18.17.1",
-    "pnpm": "8.7.5"
+    "pnpm": "8.7.6"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.3.1",
     "@vercel/kv": "^0.2.2",
     "clsx": "^2.0.0",
+    "idb-keyval": "^6.2.1",
     "immer": "^10.0.2",
     "jotai": "^2.4.0",
     "jotai-immer": "^0.2.0",
