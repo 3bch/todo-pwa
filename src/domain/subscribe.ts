@@ -21,7 +21,7 @@ export async function subscribe(): Promise<void> {
 
   if (subscription === null) {
     subscription = await registration.pushManager.subscribe({
-      userVisibleOnly: false,
+      userVisibleOnly: true,
       applicationServerKey: urlBase64ToUint8Array(import.meta.env.VITE_VAPID_PUBLIC_KEY),
     });
   }
