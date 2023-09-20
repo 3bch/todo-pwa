@@ -16,7 +16,7 @@ export const HeaderButton: FC<HeaderButtonProps> = ({ children, onClick, submit 
         'transition-colors duration-200 hover:bg-primary-100',
       )}
       onClick={onClick}
-      type={submit ? 'submit' : undefined}
+      type={submit ? 'submit' : 'button'}
     >
       {children}
     </button>

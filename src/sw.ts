@@ -1,9 +1,10 @@
+import { get, set } from 'idb-keyval';
 import { DateTime } from 'luxon';
 import { array, safeParse } from 'valibot';
 import { clientsClaim } from 'workbox-core';
 import { cleanupOutdatedCaches, precacheAndRoute } from 'workbox-precaching';
 
-import { TaskScheduleSchema, type TaskSchedule } from '##/domain/schema';
+import { TaskScheduleSchema } from '##/domain/schema';
 
 declare let self: ServiceWorkerGlobalScope;
 
@@ -16,66 +17,68 @@ self.addEventListener('install', () => {
 cleanupOutdatedCaches();
 precacheAndRoute(self.__WB_MANIFEST);
 
-let schedules: TaskSchedule[] = [];
-
 const MessageSchema = array(TaskScheduleSchema);
 
 self.addEventListener('message', (event) => {
   const parsed = safeParse(MessageSchema, event.data);
   if (!parsed.success) {
-    console.error('ServiceWorker: invalid message', parsed.error);
+    console.error('ServiceWorker: Invalid message', parsed.error);
     return;
   }
 
-  schedules = parsed.data;
+  // IndexedDB には変換前のデータで保存する
+  event.waitUntil(set('schedules', event.data));
 });
 
-self.addEventListener('push', (event) => {
+async function notify() {
+  const data = await get<unknown>('schedules');
+  const parsed = safeParse(MessageSchema, data);
+  if (!parsed.success) {
+    console.error('ServiceWorker: Invalid IndexedDB data', parsed.error);
+    return;
+  }
+
   const today = DateTime.now().set({ hour: 0, minute: 0, second: 0, millisecond: 0 });
   const tomorrow = today.plus({ days: 1 });
-  const titles: string[] = [];
 
-  for (const schedule of schedules) {
-    if (today <= schedule.nextDate && schedule.nextDate < tomorrow) {
-      titles.push(schedule.title);
-    }
-  }
-
-  console.log('notification', titles);
+  const schedules = parsed.data;
+  const titles = schedules
+    .filter((schedule) => {
+      return today <= schedule.nextDate && schedule.nextDate < tomorrow;
+    })
+    .map((schedule) => schedule.title);
 
   if (0 < titles.length) {
-    event.waitUntil(
-      self.registration.showNotification('今日のタスク', {
-        body: titles.join(', '),
-      }),
-    );
+    await self.registration.showNotification('今日のタスク', {
+      body: titles.join(', '),
+    });
   } else {
-    event.waitUntil(self.registration.showNotification('今日のタスクはありません'));
+    await self.registration.showNotification('今日のタスクはありません');
   }
 
-  const keepSubscription = async () => {
-    const subscription = await self.registration.pushManager.getSubscription();
-    await self.fetch('/api/subscribe', {
-      method: 'POST',
-      body: JSON.stringify(subscription),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
+  const subscription = await self.registration.pushManager.getSubscription();
+  await self.fetch('/api/subscribe', {
+    method: 'POST',
+    body: JSON.stringify(subscription),
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
 
-    await self.fetch('/api/log', {
-      method: 'POST',
-      body: JSON.stringify({
-        endpoint: subscription?.endpoint,
-        titles,
-      }),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-  };
+  await self.fetch('/api/log', {
+    method: 'POST',
+    body: JSON.stringify({
+      endpoint: subscription?.endpoint,
+      titles,
+    }),
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+}
 
-  event.waitUntil(keepSubscription());
+self.addEventListener('push', (event) => {
+  event.waitUntil(notify());
 });
 
 self.addEventListener('notificationclick', (event) => {
