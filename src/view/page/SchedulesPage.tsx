@@ -52,6 +52,7 @@ function formatWeekday(weekday: number): string {
 
 export const SchedulesPage: FC = () => {
   const schedules = useAtomValue(selectAllTaskSchedulesAtom);
+  schedules.sort((a, b) => a.nextDate.toMillis() - b.nextDate.toMillis());
   return (
     <div className={styles.page}>
       <div className={styles.header}>
