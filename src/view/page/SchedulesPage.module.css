@@ -20,6 +20,8 @@
   display: grid;
   grid-auto-rows: 64px;
   overflow-y: auto;
+  overflow-x: hidden;
+  width: 100%;
 }
 
 .row {
@@ -37,7 +39,9 @@
   font-size: 1.25rem;
   line-height: 1.75rem;
   padding: 4px;
+  overflow: hidden;
   text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .edit {
