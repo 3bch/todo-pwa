@@ -126,7 +126,7 @@ export const CreateSchedulePage: FC = () => {
               <option value={4}>木曜日</option>
               <option value={5}>金曜日</option>
               <option value={6}>土曜日</option>
-              <option value={0}>日曜日</option>
+              <option value={7}>日曜日</option>
             </select>
           </div>
         </div>
