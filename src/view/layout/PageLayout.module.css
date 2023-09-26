@@ -4,9 +4,8 @@
   display: grid;
   overflow: hidden;
   grid-template-columns: 1fr 1fr 1fr;
-  grid-template-rows: 64px 1fr 80px;
+  grid-template-rows: 1fr 64px;
   grid-template-areas:
-    'main      main        main'
     'main      main        main'
     'menu-left menu-center menu-right';
 }
@@ -14,6 +13,7 @@
 .main {
   grid-area: main;
   overflow: hidden;
+  position: relative;
 }
 
 .menuTodo {
