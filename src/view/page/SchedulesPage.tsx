@@ -1,37 +1,79 @@
-import clsx from 'clsx';
 import { useAtomValue } from 'jotai';
+import { type Duration, type DurationObjectUnits } from 'luxon';
 import { type FC } from 'react';
 import { Link } from 'react-router-dom';
 
 import { selectAllTaskSchedulesAtom } from '##/domain/atom';
 import { HeaderButton } from '##/view/common/HeaderButton';
+import styles from '##/view/page/SchedulesPage.module.css';
+
+function formatInterval(interval: Duration): string {
+  const unit = interval.toObject();
+  const keys = Object.keys(unit);
+  if (keys.length !== 1) {
+    return '不正な値';
+  }
+  const key = keys[0]! as keyof DurationObjectUnits;
+  const value = unit[key];
+  switch (key) {
+    case 'years':
+      return `${value}年`;
+    case 'months':
+      return `${value}ヶ月`;
+    case 'weeks':
+      return `${value}週間`;
+    case 'days':
+      return `${value}日`;
+    default:
+      return '不正な値';
+  }
+}
+
+function formatWeekday(weekday: number): string {
+  switch (weekday) {
+    case 1:
+      return '月';
+    case 2:
+      return '火';
+    case 3:
+      return '水';
+    case 4:
+      return '木';
+    case 5:
+      return '金';
+    case 6:
+      return '土';
+    case 7:
+      return '日';
+    default:
+      return '不正な値';
+  }
+}
 
 export const SchedulesPage: FC = () => {
   const schedules = useAtomValue(selectAllTaskSchedulesAtom);
   return (
-    <div className='flex h-full w-full flex-col'>
-      <div className='relative basis-16 bg-primary-400 py-4 text-center text-2xl text-white'>
+    <div className={styles.page}>
+      <div className={styles.header}>
         予定
-        <div className='absolute right-0 top-0 h-full w-24 p-2'>
+        <div className='absolute right-0 top-0 h-full w-24 p-2 text-xs'>
           <HeaderButton>
             <Link to='/schedules/new'>追加</Link>
           </HeaderButton>
         </div>
       </div>
-      <div className='grow overflow-y-auto'>
+      <div className={styles.list}>
         {schedules.map((schedule) => (
-          <div key={schedule.id} className='flex h-12 flex-row border-b-2 border-bd-400'>
-            <div className='grow p-2'>{schedule.title}</div>
-            <div className='basis-24 p-2'>
-              <Link
-                className={clsx(
-                  'block text-center',
-                  'h-full w-full rounded-lg border text-xl font-bold',
-                  'border-bd-600 bg-white text-bd-600',
-                  'transition-colors duration-200 hover:bg-primary-100',
-                )}
-                to={`/schedules/${schedule.id}`}
-              >
+          <div key={schedule.id} className={styles.row}>
+            <div className={styles.title}>{schedule.title}</div>
+            <div className={styles.detail}>
+              {schedule.nextDate?.setLocale('ja').toFormat('yyyy/MM/dd(EEEEE)')}
+              {', '}
+              {formatInterval(schedule.interval)}
+              {schedule.weekday !== undefined ? `, ${formatWeekday(schedule.weekday)}` : null}
+            </div>
+            <div className={styles.edit}>
+              <Link className={styles.editButton} to={`/schedules/${schedule.id}`}>
                 編集
               </Link>
             </div>

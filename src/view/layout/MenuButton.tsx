@@ -1,6 +1,7 @@
-import { clsx } from 'clsx';
 import { type FC } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
+
+import styles from '##/view/layout/MenuButton.module.css';
 
 export type MenuButtonProps = {
   label: string;
@@ -9,31 +10,17 @@ export type MenuButtonProps = {
 
 export const MenuButton: FC<MenuButtonProps> = ({ label, path }) => {
   const location = useLocation();
+  const navigate = useNavigate();
 
   // TODO: button なしにしてもよいかも？
 
   return location.pathname === path ? (
-    <button
-      disabled={true}
-      className={clsx(
-        'h-full w-full',
-        'bg-primary-600',
-        'text-white',
-        'transition-colors duration-200',
-      )}
-    >
+    <button type='button' disabled={true} className={styles.menuButton}>
       {label}
     </button>
   ) : (
-    <button
-      className={clsx(
-        'h-full w-full',
-        'bg-primary-400 hover:bg-primary-500',
-        'text-white',
-        'transition-colors duration-200',
-      )}
-    >
-      <Link to={path}>{label}</Link>
+    <button type='button' className={styles.menuButton} onClick={() => navigate(path)}>
+      {label}
     </button>
   );
 };
