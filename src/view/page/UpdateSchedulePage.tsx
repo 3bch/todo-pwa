@@ -153,7 +153,7 @@ export const UpdateSchedulePage: FC = () => {
               <option value={4}>木曜日</option>
               <option value={5}>金曜日</option>
               <option value={6}>土曜日</option>
-              <option value={0}>日曜日</option>
+              <option value={7}>日曜日</option>
             </select>
           </div>
           <div className='col-span-3 h-24 px-28 py-4'>
