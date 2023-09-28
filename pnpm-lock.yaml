@@ -8,9 +8,9 @@ dependencies:
   '@hookform/resolvers':
     specifier: ^3.3.1
     version: 3.3.1(react-hook-form@7.46.0)
-  '@vercel/kv':
-    specifier: ^0.2.2
-    version: 0.2.2
+  '@upstash/redis':
+    specifier: ^1.22.0
+    version: 1.22.0
   clsx:
     specifier: ^2.0.0
     version: 2.0.0
@@ -149,8 +149,8 @@ devDependencies:
     specifier: ^5.1.6
     version: 5.1.6
   vercel:
-    specifier: ^32.2.4
-    version: 32.2.4
+    specifier: ^32.2.5
+    version: 32.2.5
   vite:
     specifier: ^4.4.9
     version: 4.4.9(@types/node@20.6.2)
@@ -2687,8 +2687,8 @@ packages:
       eslint-visitor-keys: 3.4.3
     dev: true
 
-  /@upstash/redis@1.21.0:
-    resolution: {integrity: sha512-c6M+cl0LOgGK/7Gp6ooMkIZ1IDAJs8zFR+REPkoSkAq38o7CWFX5FYwYEqGZ6wJpUGBuEOr/7hTmippXGgL25A==}
+  /@upstash/redis@1.22.0:
+    resolution: {integrity: sha512-sXoJDoEqqik0HbrNE7yRWckOySEFsoBxfRdCgOqkc0w6py19ZZG50SpGkDDEUXSnBqP8VgGYXhWAiBpqxrt5oA==}
     dependencies:
       isomorphic-fetch: 3.0.0
     transitivePeerDependencies:
@@ -2737,17 +2737,8 @@ packages:
       ts-morph: 12.0.0
     dev: true
 
-  /@vercel/kv@0.2.2:
-    resolution: {integrity: sha512-mqnQOB6bkp4h5eObxfLNIlhlVqOGSH8cWOlC5pDVWTjX3zL8dETO1ZBl6M74HBmeBjbD5+J7wDJklRigY6UNKw==}
-    engines: {node: '>=14.6'}
-    dependencies:
-      '@upstash/redis': 1.21.0
-    transitivePeerDependencies:
-      - encoding
-    dev: false
-
-  /@vercel/next@4.0.5:
-    resolution: {integrity: sha512-wdRiMqfr//KPEzEJYlQ0Ri4SFbPdnoEJdpktdmaxAK7bREvkJeeCjFAkqBDGb1OiqjyKolxF1xwMewRvLj80MQ==}
+  /@vercel/next@4.0.6:
+    resolution: {integrity: sha512-SUsR+bbx4flgVYVmyOCx85PNZyd2my8LQY5uUiA1FDN3QryXL+OkQ7guS6So5gCHUEhYPHE6jPifYRgQWh73AA==}
     dev: true
 
   /@vercel/nft@0.22.5:
@@ -2813,8 +2804,8 @@ packages:
       - supports-color
     dev: true
 
-  /@vercel/remix-builder@2.0.5:
-    resolution: {integrity: sha512-EzqyE/B4dNhKYmukOGBDrRl5Z/J7UkX8Q9DXOr0EBR1fs09l+T/qxLshk7rLU2ubl1oDHiIuxOYQWHVb2vtdFw==}
+  /@vercel/remix-builder@2.0.6:
+    resolution: {integrity: sha512-STWEL91loQwCdphst1SVnnrBPbXRaiYinOeviSYX4dZ+8d8T/AyiYpRtrdSs9TgwIg8vFbtgGguzwzUKjXLAAw==}
     dependencies:
       '@vercel/nft': 0.22.5
       '@vercel/static-config': 3.0.0
@@ -5970,6 +5961,7 @@ packages:
 
   /json-schema-traverse@0.4.1:
     resolution: {integrity: sha512-xbbCH5dCYU5T8LcEhhuh7HJ88HXuW3qsI3Y0zOZFKfZEHcpWiHU/Jxzk629Brsab/mMiHQti9wMP+845RPe3Vg==}
+    requiresBuild: true
     dev: true
 
   /json-schema-traverse@1.0.0:
@@ -8202,19 +8194,19 @@ packages:
       spdx-expression-parse: 3.0.1
     dev: true
 
-  /vercel@32.2.4:
-    resolution: {integrity: sha512-Vdp/kglvpxcmY+yaQ+4/qZm8O8Hu9sn/JTpdfXNaxAcHP4Pt3GmHTZJmY0K6bQ2MoXjE0/Tp0h9BfHLUoNjRIw==}
+  /vercel@32.2.5:
+    resolution: {integrity: sha512-u41ysVXM9nOCQVjXXezx662wLlYzJ+6IVG4wofrYuYWylEMEIdGXVxezc9TJZsnEgwZGwnPiWJu3twxTOhkV9A==}
     engines: {node: '>= 16'}
     hasBin: true
     dependencies:
       '@vercel/build-utils': 7.2.0
       '@vercel/go': 3.0.1
       '@vercel/hydrogen': 1.0.1
-      '@vercel/next': 4.0.5
+      '@vercel/next': 4.0.6
       '@vercel/node': 3.0.5
       '@vercel/python': 4.0.1
       '@vercel/redwood': 2.0.2
-      '@vercel/remix-builder': 2.0.5
+      '@vercel/remix-builder': 2.0.6
       '@vercel/ruby': 2.0.2
       '@vercel/static-build': 2.0.6
     transitivePeerDependencies:
