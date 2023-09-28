@@ -1,10 +1,15 @@
-import { kv } from '@vercel/kv';
+import { Redis } from '@upstash/redis';
 import { safeParse } from 'valibot';
 
 import { PushSubscriptionSchema } from './_schema.mjs';
 
 // 期限は 5 日
 const SUBSCRIPTION_EXPIRE = 60 * 60 * 24 * 5;
+
+const kv = new Redis({
+  url: process.env.UPSTASH_REDIS_REST_URL,
+  token: process.env.UPSTASH_REDIS_REST_TOKEN,
+});
 
 export default async function handler(request, response) {
   const body = request.body;

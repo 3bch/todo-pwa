@@ -1,8 +1,13 @@
-import { kv } from '@vercel/kv';
+import { Redis } from '@upstash/redis';
 import { safeParse } from 'valibot';
 
 import { PushSubscriptionSchema } from './_schema.mjs';
 import { webpush } from './_webpush.mjs';
+
+const kv = new Redis({
+  url: process.env.UPSTASH_REDIS_REST_URL,
+  token: process.env.UPSTASH_REDIS_REST_TOKEN,
+});
 
 export default async function handler(request, response) {
   const keys = await kv.keys('subscriptions:*');
