@@ -1,4 +1,4 @@
-import { array, integer, minValue, number, object, optional, string } from 'valibot';
+import { array, integer, maxValue, minValue, number, object, optional, string } from 'valibot';
 
 export const PushSubscriptionSchema = object({
   endpoint: string(),
