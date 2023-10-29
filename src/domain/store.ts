@@ -19,7 +19,10 @@ async function backup(schedules: Array<Input<typeof TaskScheduleSchema>>) {
 
   await fetch('/api/backup', {
     method: 'POST',
-    body: JSON.stringify(schedules),
+    body: JSON.stringify({
+      endpoint: subscription.endpoint,
+      schedules,
+    }),
     headers: {
       'Content-Type': 'application/json',
     },
