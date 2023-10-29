@@ -16,6 +16,7 @@ export default async function handler(request, response) {
   const parsed = safeParse(BackupSchema, body);
 
   if (!parsed.success) {
+    console.warn('invalid backup', parsed.error);
     response.status(400).json(parsed.error);
     return;
   }
