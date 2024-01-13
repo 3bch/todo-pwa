@@ -1,9 +1,13 @@
 import { createStore } from 'jotai';
 import { Duration } from 'luxon';
-import { type Input } from 'valibot';
+import { safeParse, type Input, type Output } from 'valibot';
 
 import { selectAllTaskSchedulesAtom, updateTodayAtom } from '##/domain/atom';
-import { toInputFromTaskSchedule, type TaskScheduleSchema } from '##/domain/schema';
+import {
+  TaskSchedulesMapper,
+  toInputFromTaskSchedule,
+  type TaskScheduleSchema,
+} from '##/domain/schema';
 
 const INTERVAL = Duration.fromObject({
   minutes: 5,
@@ -50,4 +54,22 @@ export function createDomainStore() {
   }, INTERVAL.toMillis());
 
   return store;
+}
+
+type RetoreTaskSchedules = (taskSchedules: Output<typeof TaskSchedulesMapper.schema>) => void;
+
+export async function restoreSchedules(restoreSetter: RetoreTaskSchedules) {
+  const data = await fetch('/api/restore', {
+    method: 'POST',
+  });
+
+  const body: unknown = await data.json();
+
+  const result = safeParse(TaskSchedulesMapper.schema, body);
+  if (!result.success) {
+    console.error('FAILED: Restore Schedules');
+    return;
+  }
+
+  restoreSetter(result.data);
 }

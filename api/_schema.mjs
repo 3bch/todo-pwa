@@ -23,7 +23,7 @@ const TaskScheduleSchema = object({
   weekday: optional(number([integer(), minValue(1), maxValue(7)])),
 });
 
-const TaskSchedulesSchema = array(TaskScheduleSchema);
+export const TaskSchedulesSchema = array(TaskScheduleSchema);
 
 export const BackupSchema = object({
   endpoint: string(),
