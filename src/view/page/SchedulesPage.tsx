@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 
 import { restoreTaskSchedulesAtom, selectAllTaskSchedulesAtom } from '##/domain/atom';
 import { restoreSchedules } from '##/domain/store';
+import { subscribe } from '##/domain/subscribe';
 import { HeaderButton } from '##/view/common/HeaderButton';
 import styles from '##/view/page/SchedulesPage.module.css';
 
@@ -57,6 +58,7 @@ export const SchedulesPage: FC = () => {
 
   const restoreSetter = useSetAtom(restoreTaskSchedulesAtom);
   const restore = useCallback(async () => {
+    await subscribe();
     await restoreSchedules(restoreSetter);
   }, [restoreSetter]);
 

@@ -58,7 +58,7 @@ export function createDomainStore() {
 
 type RetoreTaskSchedules = (taskSchedules: Output<typeof TaskSchedulesMapper.schema>) => void;
 
-export async function restoreSchedules(restoreSetter: RetoreTaskSchedules) {
+export async function restoreSchedules(restoreSetter: RetoreTaskSchedules): Promise<void> {
   const data = await fetch('/api/restore', {
     method: 'POST',
   });
