@@ -1,9 +1,11 @@
-import { useAtomValue } from 'jotai';
+import { useAtomValue, useSetAtom } from 'jotai';
 import { type Duration, type DurationObjectUnits } from 'luxon';
-import { type FC } from 'react';
+import { useCallback, type FC } from 'react';
 import { Link } from 'react-router-dom';
 
-import { selectAllTaskSchedulesAtom } from '##/domain/atom';
+import { restoreTaskSchedulesAtom, selectAllTaskSchedulesAtom } from '##/domain/atom';
+import { restoreSchedules } from '##/domain/store';
+import { subscribe } from '##/domain/subscribe';
 import { HeaderButton } from '##/view/common/HeaderButton';
 import styles from '##/view/page/SchedulesPage.module.css';
 
@@ -53,9 +55,19 @@ function formatWeekday(weekday: number): string {
 export const SchedulesPage: FC = () => {
   const schedules = useAtomValue(selectAllTaskSchedulesAtom);
   schedules.sort((a, b) => a.nextDate.toMillis() - b.nextDate.toMillis());
+
+  const restoreSetter = useSetAtom(restoreTaskSchedulesAtom);
+  const restore = useCallback(async () => {
+    await subscribe();
+    await restoreSchedules(restoreSetter);
+  }, [restoreSetter]);
+
   return (
     <div className={styles.page}>
       <div className={styles.header}>
+        <div className='absolute left-0 top-0 h-full w-24 p-2 text-xs'>
+          <HeaderButton onClick={restore}>リストア</HeaderButton>
+        </div>
         予定
         <div className='absolute right-0 top-0 h-full w-24 p-2 text-xs'>
           <HeaderButton>

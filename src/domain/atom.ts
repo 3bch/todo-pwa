@@ -39,6 +39,13 @@ export const deleteTaskScheduleAtom = atom(null, (_, set, id: string) => {
   // TODO: 削除できたかを返す
 });
 
+export const restoreTaskSchedulesAtom = atom(
+  null,
+  (_, set, taskSchedules: Record<string, TaskSchedule>) => {
+    set(taskSchedulesAtom, taskSchedules);
+  },
+);
+
 export const completeTaskAtom = atom(null, (get, set, id: string, today: DateTime) => {
   const taskSchedule = get(taskSchedulesAtom)[id];
   if (taskSchedule === undefined) {
