@@ -16,6 +16,13 @@ const kv = new Redis({
   token: process.env.UPSTASH_REDIS_REST_TOKEN,
 });
 
+const DurationSchema = object({
+  years: optional(number([integer(), minValue(1)])),
+  months: optional(number([integer(), minValue(1)])),
+  weeks: optional(number([integer(), minValue(1)])),
+  days: optional(number([integer(), minValue(1)])),
+});
+
 const TaskScheduleSchema = object({
   id: string(),
   title: string(),
