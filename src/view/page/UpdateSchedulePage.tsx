@@ -66,6 +66,10 @@ export const UpdateSchedulePage: FC = () => {
   );
 
   const handleDelete = useCallback(() => {
+    const ok = confirm('削除します');
+    if (!ok) {
+      return;
+    }
     deleteTaskSchedule(id);
     navigate('/schedules');
   }, [deleteTaskSchedule, id, navigate]);
