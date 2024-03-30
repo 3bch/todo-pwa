@@ -29,7 +29,7 @@
   },
   "volta": {
     "node": "18.17.1",
-    "pnpm": "8.14.1"
+    "pnpm": "8.15.5"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.3.1",
@@ -81,8 +81,8 @@
     "ts-jest": "^29.1.1",
     "ts-node": "^10.9.1",
     "typescript": "^5.1.6",
-    "vercel": "^32.4.1",
-    "vite": "^4.4.9",
+    "vercel": "^33.6.2",
+    "vite": "^4.5.3",
     "vite-plugin-pwa": "^0.16.4"
   }
 }

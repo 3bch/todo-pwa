@@ -3,8 +3,8 @@ import { safeParse } from 'valibot';
 
 import { PushSubscriptionSchema } from './_schema.mjs';
 
-// 期限は 5 日
-const SUBSCRIPTION_EXPIRE = 60 * 60 * 24 * 5;
+// 期限は 60 日
+const SUBSCRIPTION_EXPIRE = 60 * 60 * 24 * 60;
 
 const kv = new Redis({
   url: process.env.UPSTASH_REDIS_REST_URL,
