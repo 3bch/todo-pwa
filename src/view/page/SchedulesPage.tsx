@@ -65,7 +65,7 @@ export const SchedulesPage: FC = () => {
   return (
     <div className={styles.page}>
       <div className={styles.header}>
-        <div className='absolute left-0 top-0 h-full w-24 p-2 text-xs'>
+        <div className='absolute left-0 top-0 hidden h-full w-24 p-2 text-xs'>
           <HeaderButton onClick={restore}>リストア</HeaderButton>
         </div>
         予定
